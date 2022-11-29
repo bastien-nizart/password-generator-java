@@ -1,6 +1,5 @@
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -9,30 +8,38 @@ class PasswordGeneratorTest {
     private PasswordGenerator passwordGenerator;
 
     @BeforeEach
-    public void initCalculatrice() {
-        this.passwordGenerator = new PasswordGenerator(PasswordGenerator.PasswordProtection.CRAZY);
+    public void initPasswordGenerator() {
+        this.passwordGenerator = new PasswordGenerator(PasswordGenerator.PasswordProtection.STRONG);
     }
 
     @AfterEach
-    public void invalideCalculatrice() {
+    public void destroyPasswordGenerator() {
         this.passwordGenerator = null;
     }
 
     @Test
-    @DisplayName("Multiple test with generation of password")
-    void generatePassword() {
-        String passwordA = this.passwordGenerator.generatePassword();
-        String passwordB = this.passwordGenerator.generatePassword();
-
-        // Check if the password have good length
-        assertEquals(10, passwordA.length());
-        // Check two password are different
-        assertNotEquals(passwordA, passwordB);
+    void showPassword() {
+        System.out.println(this.passwordGenerator.generatePassword());
     }
 
     @Test
-    @DisplayName("Show password")
-    void showPassword() {
-        System.out.println(this.passwordGenerator.generatePassword());
+    void passwordProtection() {
+        assertEquals(PasswordGenerator.PasswordProtection.STRONG.toString(), this.passwordGenerator.getLevelOfProtection());
+
+        this.passwordGenerator = new PasswordGenerator();
+        assertEquals(PasswordGenerator.PasswordProtection.LOW.toString(), this.passwordGenerator.getLevelOfProtection());
+        assertEquals(6, this.passwordGenerator.generatePassword().length());
+
+        this.passwordGenerator = new PasswordGenerator(6);
+        assertEquals(PasswordGenerator.PasswordProtection.LOW.toString(), this.passwordGenerator.getLevelOfProtection());
+        assertEquals(6, this.passwordGenerator.generatePassword().length());
+
+        this.passwordGenerator = new PasswordGenerator(6, 3);
+        assertEquals(PasswordGenerator.PasswordProtection.MEDIUM.toString(), this.passwordGenerator.getLevelOfProtection());
+        assertEquals(9, this.passwordGenerator.generatePassword().length());
+
+        this.passwordGenerator = new PasswordGenerator(6, 3, 6);
+        assertEquals(PasswordGenerator.PasswordProtection.STRONG.toString(), this.passwordGenerator.getLevelOfProtection());
+        assertEquals(15, this.passwordGenerator.generatePassword().length());
     }
 }

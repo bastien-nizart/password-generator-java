@@ -57,7 +57,7 @@ public final class PasswordGenerator {
         this.numberOfLetter = numberOfLetter;
         this.numberOfNumericChar = Math.max((MIN_LENGTH - numberOfLetter), 0);
         this.numberOfSpecialChar = 0;
-        this.levelOfProtection = PasswordProtection.MEDIUM;
+        this.setLevelOfProtection();
     }
 
     public PasswordGenerator(int numberOfLetter, int numberOfNumericChar) {
