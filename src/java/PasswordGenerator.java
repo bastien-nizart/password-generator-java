@@ -8,7 +8,7 @@ public final class PasswordGenerator {
     /** @var Array of char with any character "letters". */
     private final static char[] letter = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
     /** @var Array of char with any character "numeric". */
-    private final static char[] numericChar = "123456789".toCharArray();
+    private final static char[] numericChar = "0123456789".toCharArray();
     /** @var Array of char with any special character. */
     private final static char[] specialChar = "@&()§:=+-_%$*!?,".toCharArray();
     /** @var Number of character "letters". */
