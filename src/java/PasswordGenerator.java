@@ -21,16 +21,6 @@ public final class PasswordGenerator {
     private PasswordProtection levelOfProtection;
 
     /**
-     * Enumeration of different types of protection.
-     */
-    public enum PasswordProtection {
-        LOW, // MINIMUM OF LENGTH
-        MEDIUM, // MINIMUM TWO TYPE OF CHARACTER
-        STRONG, // MINIMUM ALL CHARACTER + LENGTH OF 12
-        CRAZY // WOW MEN, MINIMUM ALL CHARACTER + LENGTH OF 20
-    }
-
-    /**
      * Constructor of PasswordGenerator without any parameter.
      */
     public PasswordGenerator() {
