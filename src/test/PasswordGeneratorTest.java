@@ -6,10 +6,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PasswordGeneratorTest {
     private PasswordGenerator passwordGenerator;
+    private final PasswordGenerator.PasswordProtection currentPasswordProtection = PasswordGenerator.PasswordProtection.STRONG;
 
     @BeforeEach
     public void initPasswordGenerator() {
-        this.passwordGenerator = new PasswordGenerator(PasswordGenerator.PasswordProtection.STRONG);
+        this.passwordGenerator = new PasswordGenerator(this.currentPasswordProtection);
     }
 
     @AfterEach
@@ -23,8 +24,25 @@ class PasswordGeneratorTest {
     }
 
     @Test
-    void passwordProtection() {
-        assertEquals(PasswordGenerator.PasswordProtection.STRONG.toString(), this.passwordGenerator.getLevelOfProtection());
+    void allSetters() throws Exception {
+        this.passwordGenerator = new PasswordGenerator(PasswordGenerator.PasswordProtection.LOW);
+        Throwable exception = assertThrows(Exception.class, () -> this.passwordGenerator.setNumberOfLetter(4));
+        assertEquals("Minimum password size is not reached", exception.getMessage());
+        assertEquals(6, this.passwordGenerator.generatePassword().length());
+
+        this.passwordGenerator = new PasswordGenerator(4, 4, 4);
+        this.passwordGenerator.setNumberOfLetter(6);
+        assertEquals(14, this.passwordGenerator.generatePassword().length());
+        this.passwordGenerator.setNumberOfNumericChar(8);
+        assertEquals(18, this.passwordGenerator.generatePassword().length());
+        this.passwordGenerator.setNumberOfSpecialChar(7);
+        assertEquals(21, this.passwordGenerator.generatePassword().length());
+        assertEquals(PasswordGenerator.PasswordProtection.CRAZY.toString(), this.passwordGenerator.getLevelOfProtection());
+    }
+
+    @Test
+    void constructors() {
+        assertEquals(this.currentPasswordProtection.toString(), this.passwordGenerator.getLevelOfProtection());
 
         this.passwordGenerator = new PasswordGenerator();
         assertEquals(PasswordGenerator.PasswordProtection.LOW.toString(), this.passwordGenerator.getLevelOfProtection());
