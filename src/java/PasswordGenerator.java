@@ -1,15 +1,28 @@
 import java.util.*;
 
 public final class PasswordGenerator {
+    /** @var This is a minimum length of all password generate with this class. */
     private final int MIN_LENGTH = 6;
+    /** @var Random generator for select randomly a char. */
     private final Random randomGenerator = new Random();
+    /** @var Array of char with any character "letters". */
     private final static char[] letter = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+    /** @var Array of char with any character "numeric". */
     private final static char[] numericChar = "123456789".toCharArray();
+    /** @var Array of char with any special character. */
     private final static char[] specialChar = "@&()§:=+-_%$*!?,".toCharArray();
+    /** @var Number of character "letters". */
     private int numberOfLetter;
+    /** @var Number of character "numeric". */
     private int numberOfNumericChar;
-    private PasswordProtection levelOfProtection;
+    /** @var Number of special character. */
     private int numberOfSpecialChar;
+    /** @var The level protection setting of current password. */
+    private PasswordProtection levelOfProtection;
+
+    /**
+     * Enumeration of different types of protection.
+     */
     public enum PasswordProtection {
         LOW, // MINIMUM OF LENGTH
         MEDIUM, // MINIMUM TWO TYPE OF CHARACTER
@@ -17,6 +30,9 @@ public final class PasswordGenerator {
         CRAZY // WOW MEN, MINIMUM ALL CHARACTER + LENGTH OF 20
     }
 
+    /**
+     * Constructor of PasswordGenerator without any parameter.
+     */
     public PasswordGenerator() {
         this.numberOfLetter = MIN_LENGTH;
         this.numberOfNumericChar = 0;
@@ -24,6 +40,11 @@ public final class PasswordGenerator {
         this.levelOfProtection = PasswordProtection.LOW;
     }
 
+    /**
+     * This constructor choose all parameters based on the
+     * level protection of the password.
+     * @param protection level protection of the password.
+     */
     public PasswordGenerator(PasswordProtection protection) {
         switch (protection) {
             case LOW -> {
@@ -53,6 +74,10 @@ public final class PasswordGenerator {
         }
     }
 
+    /**
+     * This constructor choose all parameters ignored.
+     * @param numberOfLetter the number of letters in the password.
+     */
     public PasswordGenerator(int numberOfLetter) {
         this.numberOfLetter = numberOfLetter;
         this.numberOfNumericChar = Math.max((MIN_LENGTH - numberOfLetter), 0);
@@ -60,6 +85,11 @@ public final class PasswordGenerator {
         this.setLevelOfProtection();
     }
 
+    /**
+     * This constructor choose all parameters ignored.
+     * @param numberOfLetter the number of letters in the password.
+     * @param numberOfNumericChar the number of numeric characters in the password.
+     */
     public PasswordGenerator(int numberOfLetter, int numberOfNumericChar) {
         this.numberOfLetter = numberOfLetter;
         this.numberOfNumericChar = numberOfNumericChar;
@@ -67,6 +97,12 @@ public final class PasswordGenerator {
         this.setLevelOfProtection();
     }
 
+    /**
+     * This constructor choose all parameters ignored.
+     * @param numberOfLetter the number of letters in the password.
+     * @param numberOfNumericChar the number of numeric characters in the password.
+     * @param numberOfSpecialChar the number of special characters in the password.
+     */
     public PasswordGenerator(int numberOfLetter, int numberOfNumericChar, int numberOfSpecialChar) {
         this.numberOfLetter = numberOfLetter;
         this.numberOfNumericChar = numberOfNumericChar;
@@ -74,14 +110,18 @@ public final class PasswordGenerator {
         this.setLevelOfProtection();
     }
 
+    /**
+     * A simple getter for the length of password.
+     * @return length of password.
+     */
     private int getLength() {
         return numberOfLetter + numberOfNumericChar + numberOfSpecialChar;
     }
 
-    public String getLevelOfProtection() {
-        return this.levelOfProtection.toString();
-    }
-
+    /**
+     * Choose the level protection of password automatically thanks to
+     * the length of password and its constitution.
+     */
     private void setLevelOfProtection() {
         if (this.numberOfNumericChar > 0 && this.numberOfLetter > 0 && this.numberOfSpecialChar > 0) {
             if (getLength() >= 20) {
@@ -100,18 +140,69 @@ public final class PasswordGenerator {
         }
     }
 
-    public void setNumberOfLowerChar(int number) throws Exception {
-        if (number + numberOfNumericChar + numberOfSpecialChar < MIN_LENGTH) {
-            throw new Exception(
-                    "The sum of numberOfSpecialChar + numberOfUpperChar + " +
-                            "numberOfUpperChar would be equal to length of password"
-            );
+    /**
+     * This getter return the current level protection. All password
+     * generated with this generator will all have this level of
+     * protection.
+     * @return the current level protection as a String.
+     */
+    public String getLevelOfProtection() {
+        return this.levelOfProtection.toString();
+    }
+
+    /**
+     * Set the number of letter in the password.
+     * @param numberOfLetter The new number of letters that
+     * you want to set.
+     * @throws Exception Thrown if the MINIMUM_LENGTH of password
+     * not met with this change.
+     */
+    public void setNumberOfLetter(int numberOfLetter) throws Exception {
+        if (numberOfLetter + this.numberOfNumericChar + this.numberOfSpecialChar < MIN_LENGTH) {
+            throw new Exception("Minimum password size is not reached");
         }
 
-        numberOfLetter = number;
+        this.numberOfLetter = numberOfLetter;
         this.setLevelOfProtection();
     }
 
+    /**
+     * Set the number of numeric chars in the password.
+     * @param numberOfNumericChar The new number of numeric chars that
+     * you want to set.
+     * @throws Exception Thrown if the MINIMUM_LENGTH of password
+     * not met with this change.
+     */
+    public void setNumberOfNumericChar(int numberOfNumericChar) throws Exception {
+        if (numberOfLetter + this.numberOfLetter + this.numberOfSpecialChar < MIN_LENGTH) {
+            throw new Exception("Minimum password size is not reached");
+        }
+
+        this.numberOfNumericChar = numberOfNumericChar;
+        this.setLevelOfProtection();
+    }
+
+    /**
+     * Set the number of special chars in the password.
+     * @param numberOfSpecialChar The new number of special chars that
+     * you want to set.
+     * @throws Exception Thrown if the MINIMUM_LENGTH of password
+     * not met with this change.
+     */
+    public void setNumberOfSpecialChar(int numberOfSpecialChar) throws Exception {
+        if (numberOfSpecialChar + this.numberOfNumericChar + this.numberOfLetter < MIN_LENGTH) {
+            throw new Exception("Minimum password size is not reached");
+        }
+
+        this.numberOfSpecialChar = numberOfSpecialChar;
+        this.setLevelOfProtection();
+    }
+
+    /**
+     * Generate a random password with the different parameters
+     * included in this class.
+     * @return the password.
+     */
     public String generatePassword() {
         ArrayList<Character> password = new ArrayList<>();
         StringBuilder passwordBuilder = new StringBuilder();
